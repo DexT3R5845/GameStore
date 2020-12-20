@@ -1,0 +1,57 @@
+﻿@using GameStore.WebUI.ViewModels.Security
+@model IEnumerable<GameStore.WebUI.ViewModels.Security.UserViewModel>
+
+@{
+    ViewBag.Title = GlobalRes.Users;
+}
+<div class="well clearfix">
+    <div class="col-sm-12">
+        <h3>@ViewBag.Title</h3>
+        @if (Model == null || !Model.Any())
+        {
+            <h4>@GlobalRes.ThereAreNoUsers </h4>
+        }
+        else
+        {
+            <table class="table table-striped">
+                <caption></caption>
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(m => m.First().UserName)</th>
+                        <th>@Html.DisplayNameFor(m => m.First().Email)</th>
+                        <th>@Html.DisplayNameFor(m => m.First().FirstName)</th>
+                        <th>@Html.DisplayNameFor(m => m.First().LastName)</th>
+                        <th>@Html.DisplayNameFor(m => m.First().IsDisabled)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                @foreach (UserViewModel user in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(u => user.UserName)</td>
+                        <td>@Html.DisplayFor(u => user.Email)</td>
+                        <td>@Html.DisplayFor(u => user.FirstName)</td>
+                        <td>@Html.DisplayFor(u => user.LastName)</td>
+                        <td>@Html.DisplayFor(u => user.IsDisabled)</td>
+                        <td>
+                            @if (!user.IsReadonly)
+                            {
+                                <div class="pull-right">
+                                    @Html.ActionLink(GlobalRes.Edit, "Update", "User", new { userId = @user.UserId }, new { @class = "btn btn-primary" })
+                                    @if (!user.IsDisabled)
+                                    {
+                                        @Html.ActionLink(GlobalRes.DisableUser, "Disable", "User", new { userId = @user.UserId }, new { @class = "btn btn-warning" })
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink(GlobalRes.EnableUser, "Enable", "User", new { userId = @user.UserId }, new { @class = "btn btn-default" })
+                                    }
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+</div>

@@ -1,0 +1,30 @@
+﻿@model GameStore.WebUI.ViewModels.Security.RoleViewModel
+
+@{
+    ViewBag.Title = GlobalRes.EditRole;
+}
+
+<div class="well">
+    @using (Html.BeginForm("Update", "Role", FormMethod.Post, new { @class = "form-horizontal" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <fieldset>
+            <legend>@ViewBag.Title</legend>
+
+            @Html.ValidationSummary()
+            @Html.EditorForModel()
+
+            <div class="form-group">
+                <div class="col-lg-10 col-lg-offset-2">
+                    @Html.ActionLink(GlobalRes.ToList, "Get", "Role", null, new { @class = "btn btn-default" })
+                    <button type="submit" class="btn btn-primary">@GlobalRes.Submit</button>
+                </div>
+            </div>
+        </fieldset>
+    }
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

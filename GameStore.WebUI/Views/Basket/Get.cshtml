@@ -1,0 +1,58 @@
+﻿@using GameStore.WebUI.ViewModels
+@model GameStore.WebUI.ViewModels.BasketViewModel
+@{
+    ViewBag.Title = GlobalRes.Basket;
+}
+<div class="well clearfix">
+    <div class="col-sm-12">
+        <h3>@ViewBag.Title</h3>
+        @if (Model.BasketItems == null || !Model.BasketItems.Any())
+        {
+            <h5>@GlobalRes.YouHaventAddedAnyItems </h5>
+        }
+        else
+        {
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.LabelFor(m => Model.BasketItems.First().Game.Name)
+                        </th>
+                        <th>
+                            @Html.LabelFor(m => Model.BasketItems.First().Price)
+                        </th>
+                        <th>
+                            @Html.LabelFor(m => Model.BasketItems.First().Discount)
+                        </th>
+                        <th>
+                            @Html.LabelFor(m => Model.BasketItems.First().Quantity)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (BasketItemViewModel item in Model.BasketItems)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(p => item.Game.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(p => item.Price)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(p => item.Discount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(p => item.Quantity)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="col-sm-12">
+                @Html.ActionLink(@GlobalRes.AddToOrder, "New", "Order", null, new {@class = "btn btn-primary"})
+            </div>
+        }
+    </div>
+</div>

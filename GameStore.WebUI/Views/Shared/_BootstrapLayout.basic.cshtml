@@ -1,0 +1,105 @@
+﻿@using System.Globalization
+@using GameStore.WebUI.Helpers.Layout
+@using GameStore.Resources
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>@ViewBag.Title - Game Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="@Styles.Url("~/content/css")" rel="stylesheet" />
+    @RenderSection("head", required: false)
+    @Html.Partial("_html5shiv")
+    @* favicons and touch icons go here *@
+</head>
+<body>
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a href="../" class="navbar-brand">GameStore</a>
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse" id="navbar-main">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="@Url.Action("Get", "Game")">
+                            @GlobalRes.Games
+                            <span class="badge">@Html.Raw(LayoutHelper.GetGamesCount())</span>
+                        </a>
+                    </li>
+                    <li>
+                        @Html.ActionLink(GlobalRes.Publishers, "Get", "Publisher")
+                    </li>
+                    @if (User != null && User.IsInRole("User"))
+                    {
+                        <li>
+                            @Html.ActionLink(GlobalRes.Basket, "Get", "Basket")
+                        </li>
+                    }
+                    @if (User != null && User.IsInRole("User"))
+                    {
+                        <li>
+                            @Html.ActionLink(GlobalRes.Order, "Get", "Order")
+                        </li>
+                    }
+                    @if (User != null && (User.IsInRole("Admin") || User.IsInRole("Manager")))
+                    {
+                        <li>
+                            @Html.ActionLink(GlobalRes.Orders, "Orders", "Order")
+                        </li>
+                    }
+                    @if (User != null && (User.IsInRole("Admin") || User.IsInRole("Manager")))
+                    {
+                        <li>
+                            @Html.ActionLink(GlobalRes.Genres, "Get", "Genre")
+                        </li>
+                    }
+                    @if (User != null && User.IsInRole("Admin"))
+                    {
+                        <li>
+                            @Html.ActionLink(GlobalRes.Users, "Get", "User")
+                        </li>
+                    }
+                    @if (User != null && User.IsInRole("Admin"))
+                    {
+                        <li>
+                            @Html.ActionLink(GlobalRes.Roles, "Get", "Role")
+                        </li>
+                    }
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    @if (User == null)
+                    {
+                        <li>@Html.ActionLink(GlobalRes.LogIn, "Login", "Account")</li>
+                        <li>@Html.ActionLink(GlobalRes.Register, "Register", "Account")</li>
+                    }
+                    else
+                    {
+                        <li class="navbar-text">@String.Format(GlobalRes.HelloUsername, Html.DisplayFor(u => User.FirstName))</li>
+                        <li>@Html.ActionLink(GlobalRes.LogOut, "LogOut", "Account")</li>
+                    }
+                    @Html.Partial("_LanguageMenu")
+                </ul>
+
+            </div>
+        </div>
+    </div>
+    <div class="container clearfix">
+        <div class="clearfix">
+            @Html.Partial("_alerts")
+            @RenderBody()
+        </div>
+        <hr>
+        <footer class="clearfix">
+            <p>Copyright &copy; @System.DateTime.UtcNow.ToString("yyyy") - GameStore </p>
+        </footer>
+    </div>
+    @Scripts.Render("~/js")
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

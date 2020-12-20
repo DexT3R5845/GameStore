@@ -1,0 +1,194 @@
+﻿#define DBSYNC
+
+using GameStore.DAL.Contexts;
+using GameStore.DAL.Entities;
+using GameStore.DAL.Entities.Localization;
+using GameStore.DAL.Entities.Security;
+using GameStore.DAL.Interfaces;
+using GameStore.DAL.Repositories;
+using System;
+using System.Data.Entity;
+using Order = GameStore.DAL.Entities.Order;
+
+namespace GameStore.DAL.UnitsOfWork
+{
+    public class UnitOfWork : IUnitOfWork,IDisposable
+    {
+        private readonly GameStoreDbContext _gameStoreDbContext;
+        
+        private IGameRepository _gameRepository;
+        private IGenericRepository<Genre> _genreRepository;
+        private IGenericRepository<Comment> _commentRepository;
+        private IGenericRepository<PlatformType> _platformTypeRepository;
+        private IGenericRepository<Basket> _basketRepository;
+        private IGenericRepository<BasketItem> _basketItemRepository;
+        private IGenericRepository<Order> _orderRepository;
+        private IGenericRepository<OrderItem> _orderItemRepository;
+        private IGenericRepository<Publisher> _publisherRepository;
+
+        private IGenericRepository<User> _userRepository;
+        private IGenericRepository<Role> _roleRepository;
+        
+        private IGenericRepository<Language> _languageRepository; 
+        private IGenericRepository<GameLocalization> _gameLocalizationRepository; 
+        private IGenericRepository<GenreLocalization> _genreLocalizationRepository; 
+        private IGenericRepository<PlatformTypeLocalization> _platformTypeLocalizationRepository; 
+        private IGenericRepository<PublisherLocalization> _publisherLocalizationRepository; 
+
+        public UnitOfWork()
+        {
+            _gameStoreDbContext = new GameStoreDbContext();
+        }
+
+        public static bool IsSynchronized { get; set; }
+
+        public IGameRepository GameRepository
+        {
+            get { return _gameRepository ?? (_gameRepository = new GameRepository(_gameStoreDbContext)); }
+        }
+
+        public IGenericRepository<Genre> GenreRepository
+        {
+            get { return _genreRepository ?? (_genreRepository = new GenericRepository<Genre>(_gameStoreDbContext)); }
+        }
+
+        public IGenericRepository<Comment> CommentRepository
+        {
+            get
+            {
+                return _commentRepository ?? (_commentRepository = new GenericRepository<Comment>(_gameStoreDbContext));
+            }
+        }
+
+        public IGenericRepository<PlatformType> PlatformTypeRepository
+        {
+            get
+            {
+                return _platformTypeRepository ??
+                       (_platformTypeRepository = new GenericRepository<PlatformType>(_gameStoreDbContext));
+            }
+        }
+
+        public IGenericRepository<Order> OrderRepository
+        {
+            get { return _orderRepository ?? (_orderRepository = new GenericRepository<Order>(_gameStoreDbContext)); }
+        }
+
+        public IGenericRepository<OrderItem> OrderItemRepository
+        {
+            get
+            {
+                return _orderItemRepository ??
+                       (_orderItemRepository = new GenericRepository<OrderItem>(_gameStoreDbContext));
+            }
+        }
+
+        public IGenericRepository<Basket> BasketRepository
+        {
+            get
+            {
+                return _basketRepository ?? (_basketRepository = new GenericRepository<Basket>(_gameStoreDbContext));
+            }
+        }
+
+        public IGenericRepository<BasketItem> BasketItemRepository
+        {
+            get
+            {
+                return _basketItemRepository ??
+                       (_basketItemRepository = new GenericRepository<BasketItem>(_gameStoreDbContext));
+            }
+        }
+
+        public IGenericRepository<Publisher> PublisherRepository
+        {
+            get
+            {
+                return _publisherRepository ??
+                       (_publisherRepository = new GenericRepository<Publisher>(_gameStoreDbContext));
+            }
+        }
+
+        public IGenericRepository<User> UserRepository
+        {
+            get
+            {
+                return _userRepository ?? (_userRepository = new GenericRepository<User>(_gameStoreDbContext));
+            }
+        }
+
+        public IGenericRepository<Role> RoleRepository
+        {
+            get
+            {
+                return _roleRepository ?? (_roleRepository = new GenericRepository<Role>(_gameStoreDbContext));
+            }
+        }
+
+        public IGenericRepository<Language> LanguageRepository
+        {
+            get
+            {
+                return _languageRepository 
+                    ?? (_languageRepository = new GenericRepository<Language>(_gameStoreDbContext));
+            }
+        }
+
+        public IGenericRepository<GameLocalization> GameLocalizationRepository
+        {
+            get
+            {
+                return _gameLocalizationRepository 
+                    ?? (_gameLocalizationRepository = new GenericRepository<GameLocalization>(_gameStoreDbContext));
+            }
+        }
+
+        public IGenericRepository<GenreLocalization> GenreLocalizationRepository
+        {
+            get
+            {
+                return _genreLocalizationRepository
+                    ?? (_genreLocalizationRepository = new GenericRepository<GenreLocalization>(_gameStoreDbContext));
+            }
+        }
+
+        public IGenericRepository<PlatformTypeLocalization> PlatformTypeLocalizationRepository
+        {
+            get
+            {
+                return _platformTypeLocalizationRepository
+                    ?? (_platformTypeLocalizationRepository = new GenericRepository<PlatformTypeLocalization>(_gameStoreDbContext));
+            }
+        }
+
+        public IGenericRepository<PublisherLocalization> PublisherLocalizationRepository
+        {
+            get
+            {
+                return _publisherLocalizationRepository
+                    ?? (_publisherLocalizationRepository = new GenericRepository<PublisherLocalization>(_gameStoreDbContext));
+            }
+        }
+
+        public void SaveChanges()
+        {
+            _gameStoreDbContext.SaveChanges();
+        }
+
+        private bool disposed = false;
+        public virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing) (_gameStoreDbContext).Dispose();
+                disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+    }
+}

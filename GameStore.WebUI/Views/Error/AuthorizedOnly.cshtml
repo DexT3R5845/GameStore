@@ -1,0 +1,9 @@
+﻿@{
+    ViewBag.Title = GlobalRes.AuthorizedOnly;
+}
+
+<h3>@ViewBag.Title</h3>
+
+<p>@GlobalRes.AuthorizedOnlyDetails</p>
+
+@Html.ActionLink(GlobalRes.ReturnToMain, "Get", "Game", null, new { @class = "btn btn-primary" })
